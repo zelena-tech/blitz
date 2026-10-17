@@ -1,0 +1,14 @@
+# Compiler files
+cache/
+out/
+
+# Logs de despliegue: se guardan los de testnet, no los locales ni las simulaciones
+!/broadcast
+/broadcast/*/31337/
+/broadcast/**/dry-run/
+
+# Variables locales (nunca subir)
+.env
+
+# Dependencias: se instalan con forge install (ver README)
+lib/

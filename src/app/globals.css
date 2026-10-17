@@ -1,0 +1,156 @@
+/* Loopi — tokens del handoff de diseño (Claude Design, v2) */
+:root {
+  --forest: #23392a;
+  --forest-2: #2f4a37;
+  --olive: #4f6b3e;
+  --olive-mid: #6e8b5a;
+  --lime: #b7cb4f;
+  --lime-light: #d6e39a;
+  --lime-tint: #e6edc4;
+  --cream: #f2f0e6;
+  --cream-light: #fbfaf5;
+  --sand: #e8dfcf;
+  --border: #e1dccb;
+  --border-frame: #c7cfbc;
+  --dashed: #9fb08e;
+  --ink: #1c2a20;
+  --ink-2: #3e4b40;
+  --muted: #5b685c;
+  --muted-dark: #bfcbb8;
+  --canvas: #dce3d3;
+  --error: #8a4b2a;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans), "Instrument Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--olive); text-decoration: none; }
+a:hover { color: var(--forest); text-decoration: underline; }
+button, input, select, textarea { font-family: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--olive-mid); outline-offset: 2px; }
+
+/* Marco de teléfono: 390×844 en escritorio, pantalla completa en móvil */
+.canvas { min-height: 100dvh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 16px 64px; }
+.frame {
+  width: 390px; min-height: 844px; background: var(--cream); border-radius: 36px;
+  box-shadow: 0 0 0 1px var(--border-frame), 0 20px 50px rgba(35, 57, 42, 0.18);
+  overflow: hidden; position: relative; display: flex; flex-direction: column;
+}
+@media (max-width: 430px) {
+  .canvas { padding: 0; }
+  .frame { width: 100%; min-height: 100dvh; border-radius: 0; box-shadow: none; }
+}
+
+/* Encabezado */
+.header { display: flex; align-items: center; justify-content: space-between; padding: 22px 20px 10px; }
+.logo { height: 24px; width: auto; display: block; }
+
+/* Pills */
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; font-size: 11px; font-weight: 500; padding: 4px 10px; white-space: nowrap; }
+.pill-lime { background: var(--lime-tint); color: var(--forest); }
+.pill-sand { background: var(--sand); color: var(--ink); }
+.pill-cream { background: var(--cream-light); color: var(--ink); }
+.pill-role { background: var(--sand); color: var(--ink); font-size: 11px; padding: 5px 10px; font-weight: 400; }
+.pill-wallet { background: var(--cream-light); font-size: 11px; padding: 6px 10px; font-weight: 400; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--olive-mid); display: inline-block; }
+
+/* Chips */
+.chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 18px 20px 10px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { border: 1px solid var(--border); background: var(--cream-light); color: var(--ink); white-space: nowrap; font-size: 13px; padding: 8px 14px; border-radius: 999px; }
+.chip.on { border-color: var(--forest); background: var(--forest); color: var(--cream); }
+
+/* Cards */
+.card { background: var(--cream-light); border-radius: 22px; box-shadow: 0 0 0 1px var(--border); }
+.row { background: var(--cream-light); border-radius: 18px; box-shadow: 0 0 0 1px var(--border); }
+.panel { background: var(--forest); color: var(--cream); border-radius: 28px; }
+
+/* Barras */
+.bar { height: 8px; border-radius: 999px; background: var(--sand); position: relative; overflow: hidden; }
+.bar-10 { height: 10px; }
+.bar > span { position: absolute; inset: 0 auto 0 0; border-radius: 999px; }
+.bar .raised { background: var(--lime); transition: width 0.6s; }
+.bar .released { background: var(--forest); }
+
+/* Inputs */
+.input, .select, .textarea {
+  font-size: 14px; color: var(--ink); background: var(--cream-light); border: 1px solid var(--border);
+  border-radius: 14px; padding: 11px 14px; width: 100%; min-width: 0;
+}
+.select { padding: 11px 12px; }
+.textarea { resize: none; }
+.label { font-size: 12px; color: var(--muted); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.select-pill { flex: 1; font-size: 13px; color: var(--ink); background: var(--cream-light); border: 1px solid var(--border); border-radius: 999px; padding: 9px 14px; }
+
+/* CTA pill con círculo a la derecha */
+.cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
+  padding: 6px 6px 6px 20px; border-radius: 999px; border: 0; background: var(--forest); color: var(--cream);
+  font-size: 15px; font-weight: 500; min-height: 52px; text-align: left;
+}
+.cta.sm { min-height: 48px; font-size: 14px; padding-left: 18px; }
+.cta:disabled { opacity: 0.45; }
+.cta .circle { width: 40px; height: 40px; border-radius: 50%; background: var(--lime); color: var(--ink); display: flex; align-items: center; justify-content: center; flex: none; }
+.cta.sm .circle { width: 34px; height: 34px; }
+.cta.outline { background: var(--cream); color: var(--ink); border: 1px solid var(--border); padding-left: 16px; }
+.cta.outline .circle { background: var(--olive-mid); color: var(--cream); }
+.cta.cream { background: var(--cream); color: var(--ink); padding: 5px 5px 5px 18px; min-height: 48px; font-size: 14px; }
+.cta.cream .circle { width: 38px; height: 38px; }
+.btn-ghost { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--olive); font-size: 13px; font-weight: 500; padding: 0; }
+.btn-text { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--ink); font-size: 13px; }
+.btn-circle { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--cream-light); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.btn-secondary { border-radius: 999px; border: 1px solid #d2cbb6; background: var(--cream-light); color: var(--ink); font-size: 14px; font-weight: 500; min-height: 52px; }
+.btn-connect { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--cream-light); color: var(--ink); border-radius: 999px; padding: 8px 14px; font-size: 13px; }
+
+/* Tipografía */
+.h1 { font-size: 26px; font-weight: 500; line-height: 1.1; letter-spacing: -0.025em; text-wrap: pretty; }
+.h1-xl { font-size: 30px; letter-spacing: -0.03em; line-height: 1.05; }
+.h2 { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+.h3 { font-size: 17px; font-weight: 500; }
+.mark { background: var(--lime-tint); box-shadow: inset 0 0 0 1px var(--olive-mid); border-radius: 8px; padding: 0 6px; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); }
+.break { word-break: break-all; }
+.sub { font-size: 13px; line-height: 1.45; color: var(--muted); }
+.meta { font-size: 12px; color: var(--muted); }
+.meta-xs { font-size: 11px; color: var(--muted); }
+
+/* Placeholder de imagen (reemplaza <image-slot> del prototipo) */
+.img {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #e6edc4 0%, #c9d7a4 100%); color: var(--olive);
+  font-size: 11px; text-align: center; padding: 8px; overflow: hidden; position: relative;
+}
+.img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+
+/* Avatares */
+.avatar { border-radius: 50%; background: var(--lime); color: var(--ink); display: flex; align-items: center; justify-content: center; font-weight: 600; flex: none; }
+
+/* Utilidades */
+.col { display: flex; flex-direction: column; }
+.rowx { display: flex; align-items: center; }
+.between { display: flex; justify-content: space-between; align-items: center; }
+.gap2 { gap: 2px; } .gap3 { gap: 3px; } .gap4 { gap: 4px; } .gap6 { gap: 6px; } .gap8 { gap: 8px; } .gap10 { gap: 10px; } .gap12 { gap: 12px; } .gap14 { gap: 14px; }
+.px20 { padding-left: 20px; padding-right: 20px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Hoja inferior (sheet) */
+.overlay { position: absolute; inset: 0; background: rgba(28, 42, 32, 0.45); display: flex; align-items: flex-end; z-index: 10; }
+.sheet { width: 100%; background: var(--cream); border-radius: 28px 28px 0 0; padding: 22px 20px 26px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Panel de integridad con glow al coincidir */
+.integrity { transition: box-shadow 0.4s; }
+.integrity.match { box-shadow: 0 0 0 3px var(--lime), 0 16px 40px rgba(183, 203, 79, 0.35); }
+.check-glow { box-shadow: 0 0 24px rgba(183, 203, 79, 0.55); }
+
+/* Ocultar botón de RainbowKit por defecto y usar el nuestro */
+.rk-hidden { display: none; }
