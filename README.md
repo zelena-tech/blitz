@@ -6,6 +6,26 @@ Loopi cierra el ciclo de la ayuda humanitaria: los **Ángeles** aportan recursos
 ponen las manos, y un **Veedor** independiente aprueba cada hito con evidencia. Ningún peso sale sin esa aprobación,
 y cada hora de trabajo queda en una hoja de vida pública que nadie puede inflar.
 
+## En vivo
+
+- **App:** https://loopi-blitz.azurewebsites.net
+- **Red:** Monad testnet (chain id 10143)
+
+| Contrato | Dirección | Explorador |
+| --- | --- | --- |
+| `LoopiHub` v2.1 | `0x1e5A4C662704c3d8e9F292bDc670c6371305D02a` | [MonadVision](https://testnet.monadvision.com/address/0x1e5A4C662704c3d8e9F292bDc670c6371305D02a) · [Monadscan](https://testnet.monadscan.com/address/0x1e5A4C662704c3d8e9F292bDc670c6371305D02a) |
+| `MockUSDC` (mUSDC) | `0x794b4644176A18f7366c067004a97BB63105D701` | [MonadVision](https://testnet.monadvision.com/address/0x794b4644176A18f7366c067004a97BB63105D701) · [Monadscan](https://testnet.monadscan.com/address/0x794b4644176A18f7366c067004a97BB63105D701) |
+
+Código fuente verificado en MonadVision (Sourcify, coincidencia exacta). Desplegado en el bloque 71957625 con
+4 transacciones ([log de Foundry](contracts/broadcast/Deploy.s.sol/10143/run-latest.json)):
+
+1. [Crear MockUSDC](https://testnet.monadvision.com/tx/0xd9f1d24886d0ee589e0e17f8a7df4c5cf94602888bcfda812e9b1e82d71c218e)
+2. [Crear LoopiHub](https://testnet.monadvision.com/tx/0x40476e9284f2d8b3aa560fecf7d79a9d1691b409d20c5ce8637983f52d8cfc54)
+3. [Aprobar al organizador](https://testnet.monadvision.com/tx/0x592a6e5ea0fa764a02f2841c861872a477f615a0c41c52e6428401236f48a24c)
+4. [Entregar 10.000 mUSDC al Ángel de la demo](https://testnet.monadvision.com/tx/0x61e31cb36e010d09a5259f81fcf53f29d1d1bd453fee4aaf7ee25d041743f927)
+
+Admin del contrato (owner) y organizador aprobado: `0x0000aEb4E3b0ACEbc85a48e825c86538d9597Cb7`.
+
 ## El problema
 
 El terremoto del 10 de agosto de 2026 (magnitud 7,4) golpeó Chocó, Valle del Cauca, Risaralda, Quindío y Caldas.
@@ -114,6 +134,14 @@ npm run dev                  # http://localhost:3000
 Sin direcciones en `.env.local` la app corre con datos de seed y simula las transacciones (la demo completa
 funciona igual). Con `NEXT_PUBLIC_LOOPI_HUB` y `NEXT_PUBLIC_MOCK_USDC` lee recaudado, liberado, estado de hitos,
 huellas y totales del voluntario desde el contrato, y cada botón envía la transacción real por la wallet.
+Para usar los contratos desplegados, en `.env.local`:
+
+```bash
+NEXT_PUBLIC_LOOPI_HUB=0x1e5A4C662704c3d8e9F292bDc670c6371305D02a
+NEXT_PUBLIC_MOCK_USDC=0x794b4644176A18f7366c067004a97BB63105D701
+```
+
+Las variables `NEXT_PUBLIC_*` quedan fijas en el build: si cambian, hay que volver a compilar y desplegar.
 
 ## Estructura
 

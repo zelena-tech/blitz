@@ -12,3 +12,4 @@ out/
 
 # Dependencias: se instalan con forge install (ver README)
 lib/
+/broadcast/**/*.recovery.lock
