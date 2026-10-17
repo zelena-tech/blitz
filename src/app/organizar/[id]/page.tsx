@@ -82,7 +82,7 @@ export default function OrganizerConsole({ params }: { params: Promise<{ id: str
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 8 }}>
           {EVIDENCE_FILES.map((f) => (
             <div key={f.id} className="col gap4">
-              <div style={{ aspectRatio: "1" }}><Img label="Foto" radius={12} /></div>
+              <div style={{ aspectRatio: "1" }}><Img label={f.name} radius={12} src={f.src} /></div>
               <span className="mono" style={{ fontSize: 10, color: "#5B685C" }}>{f.name}</span>
             </div>
           ))}

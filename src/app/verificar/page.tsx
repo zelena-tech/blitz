@@ -112,7 +112,7 @@ export default function VerifierInbox() {
       </div>
       <div style={{ padding: "14px 20px 0", display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 8 }}>
         {EVIDENCE_FILES.map((f) => (
-          <div key={f.id} className="col gap4"><div style={{ aspectRatio: "1" }}><Img label="Foto" radius={12} /></div><span className="mono" style={{ fontSize: 10, color: "#5B685C" }}>{f.name}</span></div>
+          <div key={f.id} className="col gap4"><div style={{ aspectRatio: "1" }}><Img label={f.name} radius={12} src={f.src} /></div><span className="mono" style={{ fontSize: 10, color: "#5B685C" }}>{f.name}</span></div>
         ))}
       </div>
       <div style={{ padding: "10px 20px 0", fontSize: 13, lineHeight: 1.45, color: "#3E4B40" }}>{submitted ? `"${demo.evidence.note}"` : "Sin nota todavía."}</div>

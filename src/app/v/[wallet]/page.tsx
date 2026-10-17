@@ -5,12 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShareNetwork } from "@phosphor-icons/react";
 import { Frame } from "@/components/Frame";
-import { Img } from "@/components/ui";
 import { Nav } from "@/components/Header";
 import { CV_BASE, CV_BY_TYPE, DEMO, VOLUNTEERS, causeById, type CvItem } from "@/lib/seed";
 import { useDemo } from "@/lib/demo";
 import { explorerTx, useVolunteerChain } from "@/lib/chain";
-import { shortAddr } from "@/lib/format";
+import { initials, shortAddr } from "@/lib/format";
 
 /** 2f · Hoja de vida del voluntario (pública). Totales del contrato + detalle de eventos. */
 export default function VolunteerCv({ params }: { params: Promise<{ wallet: string }> }) {
@@ -54,7 +53,7 @@ export default function VolunteerCv({ params }: { params: Promise<{ wallet: stri
         </div>
         <div className="rowx gap12" style={{ paddingTop: 8 }}>
           <div style={{ width: 64, height: 64, flex: "none", borderRadius: "50%", padding: 3, background: "#B7CB4F" }}>
-            <Img label="" radius={29} style={{ width: 58, height: 58, borderRadius: "50%" }} />
+            <span className="avatar" style={{ width: 58, height: 58, fontSize: 20, background: "#E6EDC4", color: "#23392A" }}>{initials(vol.name)}</span>
           </div>
           <div className="col gap3">
             <span style={{ fontSize: 24, fontWeight: 500, letterSpacing: "-0.02em" }}>{vol.name}</span>

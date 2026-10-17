@@ -86,7 +86,7 @@ export default function CauseDetail({ params }: { params: Promise<{ id: string }
       <div className="o1">
       <div style={{ padding: "10px 10px 0" }}>
         <div className="hero-img" style={{ height: 240, position: "relative", borderRadius: 28, padding: 5, background: "#B7CB4F" }}>
-          <Img label="Foto principal de la causa" radius={24} />
+          <Img label={cause.title} radius={24} src={cause.image} />
           <div style={{ position: "absolute", top: 16, left: 16, right: 16, display: "flex", justifyContent: "space-between", pointerEvents: "none" }}>
             <Link href="/" className="btn-circle" aria-label="Volver" style={{ pointerEvents: "auto" }}><ArrowLeft size={16} /></Link>
             <span className="rowx gap8" style={{ alignSelf: "center", pointerEvents: "auto" }}>

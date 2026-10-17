@@ -46,6 +46,7 @@ export type Cause = {
   organizer: string;
   verifier: string;
   closes: string;
+  image: string;
   milestones: Milestone[];
   trace: TraceEvent[];
 };
@@ -69,14 +70,14 @@ const TAPON_TRACE: TraceEvent[] = [
 
 export const CAUSES: Cause[] = [
   {
-    id: 1, title: "Techos para la vereda El Tapón", short: "El Tapón", type: "Vivienda", dept: "Chocó", place: "Bagadó",
+    id: 1, image: "/causas/1.jpg", title: "Techos para la vereda El Tapón", short: "El Tapón", type: "Vivienda", dept: "Chocó", place: "Bagadó",
     goal: 12000, raised: 8400, released: 3200, slots: "6/10",
     description: "38 familias perdieron el techo. Organiza Fundación Pacífico Vivo; verifica Cruz Roja Chocó.",
     organizer: "Fundación Pacífico Vivo", verifier: "Cruz Roja Chocó", closes: "30 nov",
     milestones: TAPON_MILESTONES, trace: TAPON_TRACE,
   },
   {
-    id: 2, title: "Ollas comunitarias en Tadó", short: "Ollas en Tadó", type: "Alimentos", dept: "Chocó", place: "Tadó",
+    id: 2, image: "/causas/2.jpg", title: "Ollas comunitarias en Tadó", short: "Ollas en Tadó", type: "Alimentos", dept: "Chocó", place: "Tadó",
     goal: 4000, raised: 3900, released: 2500, slots: "12/12",
     description: "Tres cocinas comunitarias para 140 personas. Organiza Veeduría Tadó; verifica Parroquia San José.",
     organizer: "Veeduría Tadó", verifier: "Parroquia San José", closes: "15 nov",
@@ -91,7 +92,7 @@ export const CAUSES: Cause[] = [
     ],
   },
   {
-    id: 3, title: "Brigada de salud rural", short: "Brigada rural", type: "Salud", dept: "Risaralda", place: "Pueblo Rico",
+    id: 3, image: "/causas/3.jpg", title: "Brigada de salud rural", short: "Brigada rural", type: "Salud", dept: "Risaralda", place: "Pueblo Rico",
     goal: 6500, raised: 2100, released: 0, slots: "3/8",
     description: "Jornadas médicas en 4 veredas sin acceso. Organiza Hospital San Rafael; verifica Secretaría de Salud.",
     organizer: "Hospital San Rafael", verifier: "Secretaría de Salud", closes: "10 dic",
@@ -102,7 +103,7 @@ export const CAUSES: Cause[] = [
     trace: [{ icon: "hand-heart", what: "Aporte de USD 2.100", who: "Fundación Éxito", when: "30 sep", tx: "0x8d1…3ce" }],
   },
   {
-    id: 4, title: "Agua potable en carrotanque", short: "Agua en Calima", type: "Logística", dept: "Valle del Cauca", place: "Calima El Darién",
+    id: 4, image: "/causas/4.jpg", title: "Agua potable en carrotanque", short: "Agua en Calima", type: "Logística", dept: "Valle del Cauca", place: "Calima El Darién",
     goal: 5000, raised: 4100, released: 1800, slots: "2/4",
     description: "Reparto diario de agua a 300 familias. Organiza JAC Calima; verifica Parroquia San José.",
     organizer: "JAC Calima", verifier: "Parroquia San José", closes: "20 nov",
@@ -117,7 +118,7 @@ export const CAUSES: Cause[] = [
     ],
   },
   {
-    id: 5, title: "Escucha para familias desplazadas", short: "Escucha Armenia", type: "Apoyo psicosocial", dept: "Quindío", place: "Armenia",
+    id: 5, image: "/causas/5.jpg", title: "Escucha para familias desplazadas", short: "Escucha Armenia", type: "Apoyo psicosocial", dept: "Quindío", place: "Armenia",
     goal: 3000, raised: 900, released: 0, slots: "5/15",
     description: "Grupos de apoyo con psicólogos voluntarios. Organiza Corporación Vínculos; verifica Universidad del Quindío.",
     organizer: "Corporación Vínculos", verifier: "Universidad del Quindío", closes: "5 dic",
@@ -135,9 +136,9 @@ export const causeById = (id: number) => CAUSES.find((c) => c.id === id);
 export const DEMO = { causeId: 1, milestoneIdx: 1 };
 
 export const EVIDENCE_FILES = [
-  { id: 1, name: "techo_04.jpg" },
-  { id: 2, name: "viaje_02.jpg" },
-  { id: 3, name: "recibo.jpg" },
+  { id: 1, name: "techo_04.jpg", src: "/evidencia/techo_04.jpg" },
+  { id: 2, name: "viaje_02.jpg", src: "/evidencia/viaje_02.jpg" },
+  { id: 3, name: "cuadrilla_01.jpg", src: "/evidencia/cuadrilla_01.jpg" },
 ];
 export const EVIDENCE_NOTE = "Se instalaron 22 de 38 techos. Transporte de materiales en 3 viajes por el río Andágueda.";
 

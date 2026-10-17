@@ -51,7 +51,7 @@ export default function Explore() {
         {visible.map((c) => (
           <Link key={c.id} href={`/c/${c.id}`} className="card col gap10" style={{ padding: 8, color: "inherit", textDecoration: "none" }}>
             <div style={{ height: 132, position: "relative" }}>
-              <Img label="Foto de la causa" radius={16} />
+              <Img label={c.title} radius={16} src={c.image} />
               <span className="pill pill-cream" style={{ position: "absolute", top: 10, left: 10, pointerEvents: "none" }}>{c.type}</span>
             </div>
             <div className="col gap8" style={{ padding: "2px 8px 8px" }}>
