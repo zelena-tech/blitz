@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Servidor autocontenido (.next/standalone) para Azure App Service: sube solo lo que corre, sin node_modules completo
+  output: "standalone",
   webpack: (config) => {
     // Dependencias opcionales de los conectores de wagmi que no se usan en Loopi
     config.externals.push("pino-pretty", "lokijs", "encoding");
