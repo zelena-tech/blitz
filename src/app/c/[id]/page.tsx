@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Storefront, X } from "@phosphor-icons/react";
 import { useAccount } from "wagmi";
 import { Frame } from "@/components/Frame";
-import { WalletPill } from "@/components/Header";
+import { Nav, WalletPill } from "@/components/Header";
 import { Bar, Cta, Img, StatusPill, Trace } from "@/components/ui";
 import { causeById, type MilestoneStatus, type TraceEvent } from "@/lib/seed";
 import { useDemo, setDemo, fakeTx } from "@/lib/demo";
@@ -33,18 +33,29 @@ export default function CauseDetail({ params }: { params: Promise<{ id: string }
   const onChain = chain && chain.exists ? chain : undefined;
   const raised = onChain ? onChain.raised : cause.raised + (demo.extraRaised[cause.id] ?? 0);
   const released = onChain ? onChain.released : cause.released + (cause.id === 1 && demo.decision === "approved" ? 4800 : 0);
-  const room = Math.max(0, cause.goal - raised);
+  const goal = onChain?.goal || cause.goal;
+  const room = Math.max(0, goal - raised);
   const amt = Math.max(0, parseInt(amount, 10) || 0);
-  const overGoal = amt > room || amt === 0;
+  // Con contrato no hay tope: "más aportes = más alcance". Sin contrato, la UI respeta la meta del diseño.
+  const overGoal = amt === 0 || (!onChain && amt > room);
 
   const milestones = cause.milestones.map((m, i) => {
     let status: MilestoneStatus = m.status;
-    if (onChain?.milestones[i]) status = onChain.milestones[i].status;
+    const oc = onChain?.milestones[i];
+    if (oc) status = oc.status;
     else if (cause.id === 1 && i === 1) status = demo.decision === "approved" ? "Liberado" : demo.evidence.submitted && !demo.decision ? "En revisión" : "Pendiente";
-    return { ...m, status };
+    return { ...m, status, amount: oc ? oc.amount : m.amount, payee: oc && oc.amount === 0 ? "Sin pago · solo horas" : m.payee };
   });
 
   const trace: TraceEvent[] = [...(demo.extraTrace[cause.id] ?? []), ...cause.trace];
+
+  const [faucetMsg, setFaucetMsg] = useState<string>();
+  const pedirPrueba = async () => {
+    setFaucetMsg(undefined);
+    try { setBusy(true); await actions.pedirPrueba(); setFaucetMsg("Recibiste 100 mUSDC de prueba."); }
+    catch (e) { setFaucetMsg((e as Error).message.split("\n")[0]); }
+    finally { setBusy(false); }
+  };
 
   const donate = async () => {
     setError(undefined);
@@ -70,12 +81,18 @@ export default function CauseDetail({ params }: { params: Promise<{ id: string }
 
   return (
     <Frame>
+      <div className="split">
+      <div className="main">
+      <div className="o1">
       <div style={{ padding: "10px 10px 0" }}>
-        <div style={{ height: 240, position: "relative", borderRadius: 28, padding: 5, background: "#B7CB4F" }}>
+        <div className="hero-img" style={{ height: 240, position: "relative", borderRadius: 28, padding: 5, background: "#B7CB4F" }}>
           <Img label="Foto principal de la causa" radius={24} />
           <div style={{ position: "absolute", top: 16, left: 16, right: 16, display: "flex", justifyContent: "space-between", pointerEvents: "none" }}>
             <Link href="/" className="btn-circle" aria-label="Volver" style={{ pointerEvents: "auto" }}><ArrowLeft size={16} /></Link>
-            <span style={{ alignSelf: "center", pointerEvents: "auto" }}><WalletPill causeId={BigInt(cause.id)} variant="wallet" /></span>
+            <span className="rowx gap8" style={{ alignSelf: "center", pointerEvents: "auto" }}>
+              <span className="nav-wrap"><Nav /></span>
+              <WalletPill causeId={BigInt(cause.id)} variant="wallet" />
+            </span>
           </div>
         </div>
       </div>
@@ -85,26 +102,9 @@ export default function CauseDetail({ params }: { params: Promise<{ id: string }
         <h1 className="h1" style={{ margin: 0 }}>{cause.title}</h1>
         <p className="sub" style={{ margin: 0, lineHeight: 1.5 }}>{cause.description}</p>
       </div>
-
-      <div className="card col gap10" style={{ margin: "16px 20px 0", padding: 16 }}>
-        <div className="between" style={{ alignItems: "baseline" }}>
-          <span style={{ fontSize: 24, fontWeight: 500, letterSpacing: "-0.02em" }}>{usd(raised)}</span>
-          <span className="meta">de {usd(cause.goal)}</span>
-        </div>
-        <span className="meta" style={{ marginTop: -6 }}>{cop(raised)}</span>
-        <Bar raised={raised} released={released} goal={cause.goal} h={10} />
-        <div style={{ display: "flex", gap: 14, fontSize: 11, color: "#5B685C", flexWrap: "wrap" }}>
-          <span className="rowx gap6"><span style={{ width: 8, height: 8, borderRadius: "50%", background: "#23392A" }} />Liberado {usd(released)}</span>
-          <span className="rowx gap6"><span style={{ width: 8, height: 8, borderRadius: "50%", background: "#B7CB4F" }} />En custodia</span>
-          <span>Cierra {cause.closes}</span>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 8, paddingTop: 4 }}>
-          <Cta variant="sm" onClick={() => { setOpen(true); setStep(0); setError(undefined); }}>Aportar</Cta>
-          <Cta variant="outline" onClick={() => alert("Postulación off-chain: el organizador te registra por wallet (P1).")}>Voluntario</Cta>
-        </div>
       </div>
 
-      <div className="col gap8" style={{ padding: "24px 20px 0" }}>
+      <div className="col gap8 o3" style={{ padding: "24px 20px 0" }}>
         <span className="h2">Hitos</span>
         {milestones.map((m) => (
           <div key={m.n} className="row" style={{ display: "grid", gridTemplateColumns: "34px minmax(0,1fr) auto", gap: 12, alignItems: "center", padding: 12 }}>
@@ -120,8 +120,30 @@ export default function CauseDetail({ params }: { params: Promise<{ id: string }
           </div>
         ))}
       </div>
+      </div>
 
-      <Trace events={trace} />
+      <div className="side">
+      <div className="card col gap10 o2" style={{ margin: "16px 20px 0", padding: 16 }}>
+        <div className="between" style={{ alignItems: "baseline" }}>
+          <span style={{ fontSize: 24, fontWeight: 500, letterSpacing: "-0.02em" }}>{usd(raised)}</span>
+          <span className="meta">de {usd(goal)}</span>
+        </div>
+        <span className="meta" style={{ marginTop: -6 }}>{cop(raised)}</span>
+        <Bar raised={raised} released={released} goal={goal} h={10} />
+        <div style={{ display: "flex", gap: 14, fontSize: 11, color: "#5B685C", flexWrap: "wrap" }}>
+          <span className="rowx gap6"><span style={{ width: 8, height: 8, borderRadius: "50%", background: "#23392A" }} />Liberado {usd(released)}</span>
+          <span className="rowx gap6"><span style={{ width: 8, height: 8, borderRadius: "50%", background: "#B7CB4F" }} />En custodia</span>
+          <span>Cierra {cause.closes}</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 8, paddingTop: 4 }}>
+          <Cta variant="sm" onClick={() => { setOpen(true); setStep(0); setError(undefined); }}>Aportar</Cta>
+          <Cta variant="outline" onClick={() => alert("Postulación off-chain: el organizador te registra por wallet (P1).")}>Voluntario</Cta>
+        </div>
+      </div>
+
+      <div className="o4"><Trace events={trace} /></div>
+      </div>
+      </div>
 
       {open && (
         <div className="overlay" onClick={() => !busy && setOpen(false)}>
@@ -143,6 +165,10 @@ export default function CauseDetail({ params }: { params: Promise<{ id: string }
             {overGoal && amt > 0 && <div style={{ fontSize: 12, color: "#8A4B2A" }}>Supera lo que falta para la meta.</div>}
             {error && <div style={{ fontSize: 12, color: "#8A4B2A" }}>{error}</div>}
             <Cta onClick={donate} disabled={overGoal || busy}>{busy ? "Enviando…" : step === 0 ? "Autorizar " + usd(amt) : "Confirmar aporte"}</Cta>
+            {isConfigured() && (
+              <button className="btn-ghost" style={{ alignSelf: "flex-start" }} onClick={pedirPrueba} disabled={busy}>Pedir 100 mUSDC de prueba (una vez por wallet)</button>
+            )}
+            {faucetMsg && <div className="meta-xs">{faucetMsg}</div>}
             <div className="meta-xs" style={{ lineHeight: 1.4 }}>Tu aporte queda en custodia y solo se libera al proveedor cuando {cause.verifier} verifica cada hito.</div>
           </div>
         </div>

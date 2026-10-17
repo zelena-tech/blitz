@@ -39,14 +39,16 @@ export function useCauseChain(id: number) {
   const t = cause.data as readonly [Address, number, Address, bigint, bigint, `0x${string}`] | undefined;
   const m = ms.data as readonly [readonly { payee: Address; amount: bigint; status: number }[], readonly `0x${string}`[]] | undefined;
   if (!t || t[0] === "0x0000000000000000000000000000000000000000") return { exists: false as const, refetch: () => { cause.refetch(); ms.refetch(); } };
+  const list = m?.[0] ?? [];
   return {
+    goal: list.reduce((a, x) => a + toUsd(x.amount), 0),
     exists: true as const,
     organizer: t[0],
     verifier: t[2],
     raised: toUsd(t[3]),
     released: toUsd(t[4]),
     metadataHash: t[5],
-    milestones: (m?.[0] ?? []).map((x, i) => ({
+    milestones: list.map((x, i) => ({
       payee: x.payee,
       amount: toUsd(x.amount),
       status: STATUS[x.status] ?? "Pendiente",

@@ -27,26 +27,27 @@ export default function Explore() {
   return (
     <Frame>
       <Header />
-      <div className="col gap8" style={{ padding: "14px 20px 0" }}>
-        <span className="pill pill-lime" style={{ alignSelf: "flex-start" }}>Terremoto del 10 de agosto</span>
-        <h1 className="h1 h1-xl" style={{ margin: 0 }}>Ayuda que <span className="mark">se ve</span> llegar</h1>
-        <p className="sub" style={{ margin: 0 }}>Cada aporte se libera por hitos, solo cuando un tercero verifica la evidencia.</p>
+      <div className="explore-top px20" style={{ paddingTop: 14 }}>
+        <div className="col gap8 hero-copy">
+          <span className="pill pill-lime" style={{ alignSelf: "flex-start" }}>Terremoto del 10 de agosto</span>
+          <h1 className="h1 h1-xl" style={{ margin: 0 }}>Ayuda que <span className="mark">se ve</span> llegar</h1>
+          <p className="sub" style={{ margin: 0 }}>Cada aporte se libera por hitos, solo cuando un tercero verifica la evidencia.</p>
+        </div>
+        <div className="rowx gap8" style={{ paddingTop: 18 }}>
+          <MapPin size={18} color="#6E8B5A" />
+          <select className="select-pill" value={dept} onChange={(e) => setDept(e.target.value)} aria-label="Departamento" style={{ minWidth: 220 }}>
+            {DEPTS.map((d) => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </div>
       </div>
 
-      <div className="chips" role="tablist" aria-label="Tipo de ayuda">
+      <div className="chips" role="tablist" aria-label="Tipo de ayuda" style={{ paddingBottom: 14 }}>
         {TYPES.map((t) => (
           <button key={t} role="tab" aria-selected={t === type} className={"chip" + (t === type ? " on" : "")} onClick={() => setType(t)}>{t}</button>
         ))}
       </div>
 
-      <div className="rowx gap8" style={{ padding: "0 20px 14px" }}>
-        <MapPin size={18} color="#6E8B5A" />
-        <select className="select-pill" value={dept} onChange={(e) => setDept(e.target.value)} aria-label="Departamento">
-          {DEPTS.map((d) => <option key={d} value={d}>{d}</option>)}
-        </select>
-      </div>
-
-      <div className="col gap14" style={{ padding: "0 20px 28px" }}>
+      <div className="cards">
         {visible.map((c) => (
           <Link key={c.id} href={`/c/${c.id}`} className="card col gap10" style={{ padding: 8, color: "inherit", textDecoration: "none" }}>
             <div style={{ height: 132, position: "relative" }}>
@@ -68,7 +69,7 @@ export default function Explore() {
             </div>
           </Link>
         ))}
-        {visible.length === 0 && <div className="sub" style={{ padding: "24px 0" }}>No hay causas con ese filtro.</div>}
+        {visible.length === 0 && <div className="sub" style={{ padding: "24px 0", gridColumn: "1 / -1" }}>No hay causas con ese filtro.</div>}
       </div>
     </Frame>
   );

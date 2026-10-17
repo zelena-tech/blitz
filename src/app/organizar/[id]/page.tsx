@@ -31,8 +31,9 @@ export default function OrganizerConsole({ params }: { params: Promise<{ id: str
   if (!cause) return <Frame><div style={{ padding: 40 }} className="sub">Causa no encontrada. <Link href="/">Volver</Link></div></Frame>;
 
   const idx = DEMO.milestoneIdx;
-  const m = cause.milestones[idx];
+  const seedM = cause.milestones[idx];
   const onChain = chain && chain.exists ? chain : undefined;
+  const m = { ...seedM, amount: onChain?.milestones[idx]?.amount ?? seedM.amount, payee: onChain?.milestones[idx] && onChain.milestones[idx].amount === 0 ? "sin pago, solo horas" : seedM.payee };
   const status: MilestoneStatus = onChain?.milestones[idx]?.status
     ?? (demo.decision === "approved" ? "Liberado" : demo.evidence.submitted && !demo.decision ? "En revisión" : "Pendiente");
   const submitted = status !== "Pendiente";
@@ -65,7 +66,9 @@ export default function OrganizerConsole({ params }: { params: Promise<{ id: str
   return (
     <Frame>
       <Header causeId={BigInt(cause.id)} />
-      <div className="col gap6" style={{ padding: "10px 20px 0" }}>
+      <div className="split">
+      <div className="main">
+      <div className="col gap6 o1" style={{ padding: "10px 20px 0" }}>
         <span className="meta">{cause.title} · Hito 0{m.n} de 0{cause.milestones.length}</span>
         <h1 className="h1" style={{ margin: 0 }}>{m.title}</h1>
         <div className="rowx gap8" style={{ paddingTop: 4, flexWrap: "wrap" }}>
@@ -74,7 +77,7 @@ export default function OrganizerConsole({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <div className="card col gap10" style={{ margin: "18px 20px 0", padding: 14 }}>
+      <div className="card col gap10 o2" style={{ margin: "18px 20px 0", padding: 14 }}>
         <span style={{ fontSize: 16, fontWeight: 500 }}>Evidencia</span>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 8 }}>
           {EVIDENCE_FILES.map((f) => (
@@ -101,7 +104,9 @@ export default function OrganizerConsole({ params }: { params: Promise<{ id: str
         )}
       </div>
 
-      <div className="col gap8" style={{ padding: "22px 20px 28px" }}>
+      </div>
+      <div className="side">
+      <div className="col gap8 o3" style={{ padding: "22px 20px 28px" }}>
         <div className="between" style={{ alignItems: "baseline" }}><span className="h3">Voluntarios del hito</span><span className="meta">{totalHours} h propuestas</span></div>
         {VOLUNTEERS.map((v) => (
           <div key={v.fullWallet} className="row" style={{ display: "grid", gridTemplateColumns: "36px minmax(0,1fr) 72px", gap: 10, alignItems: "center", padding: "8px 10px", borderRadius: 16 }}>
@@ -116,6 +121,8 @@ export default function OrganizerConsole({ params }: { params: Promise<{ id: str
           </div>
         ))}
         <button className="btn-ghost" style={{ alignSelf: "flex-start", padding: "4px 0" }} onClick={() => alert("Registro por wallet: P1.")}><UserPlus size={16} />Registrar por wallet</button>
+      </div>
+      </div>
       </div>
     </Frame>
   );

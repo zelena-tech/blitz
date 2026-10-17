@@ -1,10 +1,87 @@
 # Loopi — dApp del POC (Monad Blitz)
 
-Loopi cierra el ciclo de la ayuda: empresas financian causas por hitos, cada peso se libera solo cuando un
-verificador independiente aprueba la evidencia, y cada voluntario acumula horas verificadas que nadie puede inflar.
+**Aporta. Teje. Verifica. Repite.**
 
-Este repo es el frontend Next.js de las **6 pantallas mobile-first** del POC, recreadas desde el handoff de
-Claude Design (`Loopi Pantallas v2`), conectadas a los contratos `LoopiHub` y `MockUSDC` en Monad testnet.
+Loopi cierra el ciclo de la ayuda humanitaria: los **Ángeles** aportan recursos a causas concretas, los **Tejedores**
+ponen las manos, y un **Veedor** independiente aprueba cada hito con evidencia. Ningún peso sale sin esa aprobación,
+y cada hora de trabajo queda en una hoja de vida pública que nadie puede inflar.
+
+## El problema
+
+El terremoto del 10 de agosto de 2026 (magnitud 7,4) golpeó Chocó, Valle del Cauca, Risaralda, Quindío y Caldas.
+Más de 350 empresas donaron más de 700.000 millones de pesos. La plata fluye, pero la trazabilidad no:
+
+- **Las empresas** donan a cuentas y centros de acopio sin ver en qué terminó cada peso. Algunas no donan por ese miedo.
+- **Quienes ayudan** (electricistas, plomeros, gente de construcción y manos sin oficio) no tienen dónde encontrarse
+  con quien los necesita, y su trabajo no queda registrado en ningún lado.
+- **Las causas pequeñas** (veredas y municipios) no tienen vitrina frente a las grandes campañas.
+
+## Cómo funciona
+
+| Rol | Quién es | Qué hace en Loopi |
+| --- | --- | --- |
+| Ángel | Empresa (área de RSE) o persona | Explora causas, aporta mUSDC sin tope y sigue la traza de cada peso |
+| Organizador | Fundación, JAC o colectivo aprobado por Loopi | Crea la causa con hitos, sube la evidencia y propone Tejedores con horas y oficio |
+| Veedor | Tercero independiente por causa: Cruz Roja, parroquia, veeduría | Aprueba o rechaza cada hito. Nunca es el organizador ni cobra ningún hito |
+| Proveedor | Ferretería, transportador, proveedor de alimentos | Recibe el pago de un hito, directo a su wallet |
+| Tejedor | Cualquier persona, con o sin oficio | Trabaja, acumula horas certificadas y puede cobrar por su trabajo |
+
+Una causa de punta a punta:
+
+1. **Aportar.** El Ángel aporta a una causa; el dinero queda en custodia del contrato, no en la cuenta de nadie.
+2. **Trabajar.** El organizador ejecuta un hito (materiales, transporte, mano de obra o una jornada sin dinero).
+3. **Evidenciar.** Sube fotos y una nota; la huella `keccak256` del paquete queda anclada on-chain.
+4. **Verificar.** El Veedor recalcula la huella, comprueba que coincide y aprueba. En una sola transacción se paga al
+   proveedor o al Tejedor y se certifican las horas y el oficio de cada Tejedor.
+5. **Hoja de vida.** Cualquiera puede ver en `/v/[wallet]` las horas, causas y oficios certificados de un Tejedor,
+   con enlace a cada transacción en el explorador de Monad.
+
+Un hito sin dinero (por ejemplo, una jornada de limpieza) sigue el mismo camino y solo certifica horas.
+
+## Qué garantiza el contrato
+
+- **Ningún peso sale sin la aprobación del Veedor.** Las reglas de pago son código, no promesas.
+- **Un hito con dinero solo se aprueba si la causa tiene fondos.** La plata de una causa nunca paga hitos de otra.
+- **La evidencia no se puede cambiar después de aprobada.** Solo su huella va on-chain; si alguien edita la foto, la
+  huella deja de coincidir.
+- **Las horas no se inflan.** Cada Tejedor aparece una sola vez por hito, con 1 a 40 horas, y las firma el Veedor.
+- **Sin colusión obvia.** El Veedor no puede ser el organizador ni el destinatario de ningún hito.
+- **Sin fecha límite ni cancelación.** Nadie puede congelar una causa con fondos; más aportes son más alcance,
+  con hitos nuevos.
+
+## Qué va on-chain y qué no
+
+Regla: va on-chain solo lo que una empresa necesitaría no tener que creerle a nadie.
+
+| On-chain (Monad) | Off-chain (anclado por huella) |
+| --- | --- |
+| Fondos aportados y liberados por causa | Textos, fotos y descripción de la causa |
+| Hitos: monto, destinatario, estado | Perfil del Tejedor: oficios, municipio, disponibilidad |
+| Aporte de cada Ángel | Oportunidades y postulaciones |
+| Huella de la evidencia y del motivo de rechazo | Datos de contacto, solo con consentimiento |
+| Totales del Tejedor: horas, causas, hitos | Datos de damnificados: **nunca** on-chain (Ley 1581 de 2012) |
+
+## Por qué Monad
+
+- **Comisiones mínimas:** certificar cada hito y cada Tejedor es viable, incluso con decenas de personas por hito.
+- **Compatible con EVM:** contratos en Solidity con OpenZeppelin, construidos y desplegados en horas.
+- **Traza pública e imborrable:** cada evento de la causa enlaza a una transacción en MonadVision.
+
+## Estado del POC y límites conocidos
+
+- Corre en **Monad testnet** con un token de prueba (mUSDC). La salida a pesos queda para producción.
+- Si el Veedor y el organizador se coluden, el contrato no lo detecta. Siguiente paso: verificación 2 de 3.
+- Si una causa se abandona, sus fondos quedan congelados: nunca mal usados, pero tampoco devueltos.
+- Un hito paga a un solo destinatario; repartir entre varios Tejedores según horas es trabajo futuro.
+
+## Contexto
+
+Loopi es la propuesta del equipo de [Zelena](https://www.zelena.tech/) para Monad Blitz. Zelena ya probó en campo
+que personas sin experiencia cripto crean su wallet en una jornada y cobran en sus cuentas; Loopi reutiliza ese
+acompañamiento para los Tejedores.
+
+Este repo contiene el frontend Next.js (6 pantallas mobile-first, recreadas desde el handoff de Claude Design
+`Loopi Pantallas v2`) y los contratos `LoopiHub` y `MockUSDC` en `contracts/`.
 
 ## Pantallas
 
@@ -19,6 +96,12 @@ Claude Design (`Loopi Pantallas v2`), conectadas a los contratos `LoopiHub` y `M
 
 Flujo de la demo (< 3 min): **2b** aportar → **2d** subir evidencia → **2e** recalcular huella (check lima) y
 aprobar → **2f** suben las horas. `/?reset=1` reinicia la historia.
+
+## Responsive
+
+Mobile-first con tres cortes: móvil (pantalla completa), tablet desde 768 px (dos columnas, navegación en el
+encabezado, hoja de aportar como modal) y escritorio desde 1100 px (lienzo de 1180 px, columna lateral de 440 px
+pegajosa, rejilla de tres tarjetas). El orden de los bloques en móvil se conserva con `.o1`…`.o5` dentro de `.split`.
 
 ## Correr
 

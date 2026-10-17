@@ -19,7 +19,7 @@ type HashState = "idle" | "computing" | "match" | "mismatch";
 export default function VerifierInbox() {
   const cause = causeById(DEMO.causeId)!;
   const idx = DEMO.milestoneIdx;
-  const m = cause.milestones[idx];
+  const seedM = cause.milestones[idx];
   const demo = useDemo();
   const chain = useCauseChain(cause.id);
   const { address } = useAccount();
@@ -33,6 +33,7 @@ export default function VerifierInbox() {
   useEffect(() => () => clearTimeout(timer.current), []);
 
   const onChain = chain && chain.exists ? chain : undefined;
+  const m = { ...seedM, amount: onChain?.milestones[idx]?.amount ?? seedM.amount, payee: onChain?.milestones[idx] && onChain.milestones[idx].amount === 0 ? "sin pago, solo horas" : seedM.payee };
   const chainStatus = onChain?.milestones[idx]?.status;
   const submitted = chainStatus ? chainStatus !== "Pendiente" : demo.evidence.submitted;
   const anchored = onChain?.milestones[idx]?.evidence ?? demo.evidence.hash;
@@ -97,6 +98,9 @@ export default function VerifierInbox() {
   return (
     <Frame>
       <Header causeId={BigInt(cause.id)} />
+      <div className="split">
+      <div className="main">
+      <div className="o1">
       <div className="rowx gap6" style={{ padding: "8px 20px 0" }}>
         <span className="pill" style={{ background: "#23392A", color: "#F2F0E6", fontSize: 12, padding: "7px 14px", fontWeight: 400 }}>En revisión · {submitted && undecided ? 1 : 0}</span>
         <span className="pill" style={{ background: "#FBFAF5", border: "1px solid #E1DCCB", fontSize: 12, padding: "6px 14px", fontWeight: 400 }}>Resueltos · {approved ? 5 : 4}</span>
@@ -112,8 +116,11 @@ export default function VerifierInbox() {
         ))}
       </div>
       <div style={{ padding: "10px 20px 0", fontSize: 13, lineHeight: 1.45, color: "#3E4B40" }}>{submitted ? `"${demo.evidence.note}"` : "Sin nota todavía."}</div>
+      </div>
+      </div>
 
-      <div className={"panel integrity col gap12" + (hash === "match" ? " match" : "")} style={{ margin: "16px 10px 0", padding: 18 }}>
+      <div className="side">
+      <div className={"panel integrity col gap12 o2" + (hash === "match" ? " match" : "")} style={{ margin: "16px 10px 0", padding: 18 }}>
         <div className="between"><span style={{ fontSize: 15, fontWeight: 500 }}>Integridad de la evidencia</span><span className="mono" style={{ fontSize: 11, color: "#BFCBB8" }}>keccak256</span></div>
         <div className="col gap3"><span style={{ fontSize: 11, color: "#BFCBB8" }}>Registrado en Monad</span><span className="mono break" style={{ fontSize: 12, color: "#D6E39A" }}>{anchored ?? "—"}</span></div>
         <div className="col gap3"><span style={{ fontSize: 11, color: "#BFCBB8" }}>Recalculado de estos archivos</span><span className="mono break" style={{ fontSize: 12, color: hash === "match" ? "#D6E39A" : hash === "mismatch" ? "#E8A98A" : "#8FA08A" }}>{recalcText}</span></div>
@@ -128,7 +135,7 @@ export default function VerifierInbox() {
         )}
       </div>
 
-      <div className="col gap6" style={{ padding: "18px 20px 0" }}>
+      <div className="col gap6 o3" style={{ padding: "18px 20px 0" }}>
         <div className="between"><span style={{ fontSize: 16, fontWeight: 500 }}>Horas a certificar</span><span className="meta">{totalHours} h</span></div>
         {hours.map((v) => (
           <div key={v.fullWallet} className="between" style={{ fontSize: 13, padding: "8px 0", borderTop: "1px solid #E1DCCB" }}>
@@ -138,7 +145,7 @@ export default function VerifierInbox() {
         ))}
       </div>
 
-      <div className="col gap8" style={{ padding: "14px 20px 28px" }}>
+      <div className="col gap8 o4" style={{ padding: "14px 20px 28px" }}>
         {undecided && (
           <div className="col gap8">
             {showReject && <textarea className="textarea" rows={2} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Motivo del rechazo (queda su huella registrada)" style={{ fontSize: 13, padding: "10px 12px" }} />}
@@ -165,6 +172,8 @@ export default function VerifierInbox() {
             <span className="meta">El motivo quedó registrado. Los fondos siguen en custodia.</span>
           </div>
         )}
+      </div>
+      </div>
       </div>
     </Frame>
   );

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ShareNetwork } from "@phosphor-icons/react";
 import { Frame } from "@/components/Frame";
 import { Img } from "@/components/ui";
+import { Nav } from "@/components/Header";
 import { CV_BASE, CV_BY_TYPE, DEMO, VOLUNTEERS, causeById, type CvItem } from "@/lib/seed";
 import { useDemo } from "@/lib/demo";
 import { explorerTx, useVolunteerChain } from "@/lib/chain";
@@ -41,9 +42,12 @@ export default function VolunteerCv({ params }: { params: Promise<{ wallet: stri
 
   return (
     <Frame>
-      <div className="panel col gap14" style={{ margin: 10, padding: "18px 18px 22px" }}>
+      <div className="split">
+      <div className="main">
+      <div className="panel col gap14 o1" style={{ margin: 10, padding: "18px 18px 22px" }}>
         <div className="between">
           <Link href="/" aria-label="Inicio"><Image src="/assets/logo-13.png" alt="Loopi" width={88} height={22} style={{ height: 22, width: "auto", display: "block" }} /></Link>
+          <span className="nav-dark"><Nav /></span>
           <button onClick={share} style={{ display: "flex", alignItems: "center", gap: 6, border: 0, background: "#B7CB4F", color: "#1C2A20", borderRadius: 999, padding: "8px 14px", fontSize: 13, fontWeight: 500 }}>
             <ShareNetwork size={15} weight="bold" />Compartir
           </button>
@@ -70,11 +74,13 @@ export default function VolunteerCv({ params }: { params: Promise<{ wallet: stri
         </div>
       </div>
 
-      <div style={{ padding: "8px 20px 0", display: "flex", flexWrap: "wrap", gap: 6 }}>
+      <div className="o2" style={{ padding: "8px 20px 0", display: "flex", flexWrap: "wrap", gap: 6 }}>
         {byType.map((t) => <span key={t.type} className="pill pill-lime" style={{ fontSize: 12, padding: "6px 12px", fontWeight: 400 }}>{t.type} · {t.h} h</span>)}
       </div>
 
-      <div className="col gap8" style={{ padding: "22px 20px 28px" }}>
+      </div>
+      <div className="side">
+      <div className="col gap8 o3" style={{ padding: "22px 20px 28px" }}>
         <span className="h3">Hitos certificados</span>
         {cv.map((h, i) => {
           const full = h.tx.length > 20;
@@ -88,6 +94,8 @@ export default function VolunteerCv({ params }: { params: Promise<{ wallet: stri
             </div>
           );
         })}
+      </div>
+      </div>
       </div>
     </Frame>
   );

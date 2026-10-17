@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CameraPlus, PlusCircle, X } from "@phosphor-icons/react";
 import { useAccount } from "wagmi";
 import { Frame } from "@/components/Frame";
-import { WalletPill } from "@/components/Header";
+import { Nav, WalletPill } from "@/components/Header";
 import { Cta } from "@/components/ui";
 import { usd } from "@/lib/format";
 
@@ -27,9 +27,10 @@ export default function NewCause() {
     <Frame>
       <div className="header">
         <Link href="/" className="btn-text"><X size={14} />Cancelar</Link>
+        <Nav />
         <WalletPill />
       </div>
-      <form className="col gap14" style={{ padding: "8px 20px 24px" }} onSubmit={(e) => { e.preventDefault(); alert("createCause(verifier, metadataHash, payees, amounts): se conecta en P1."); }}>
+      <form className="col gap14 form-narrow" style={{ padding: "8px 20px 24px" }} onSubmit={(e) => { e.preventDefault(); alert("createCause(verifier, metadataHash, payees, amounts): se conecta en P1."); }}>
         <h1 className="h1" style={{ margin: 0 }}>Nueva causa</h1>
         <div className="field"><label className="label">Título</label><input className="input" defaultValue="Techos para la vereda El Tapón" /></div>
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 10 }}>

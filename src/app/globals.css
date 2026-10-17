@@ -37,16 +37,71 @@ button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 :focus-visible { outline: 2px solid var(--olive-mid); outline-offset: 2px; }
 
-/* Marco de teléfono: 390×844 en escritorio, pantalla completa en móvil */
+/* Marco: pantalla completa en móvil, tarjeta de 390 px en escritorio angosto,
+   y layout fluido de 2 columnas desde tablet (768) y escritorio (1100) */
 .canvas { min-height: 100dvh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 16px 64px; }
 .frame {
-  width: 390px; min-height: 844px; background: var(--cream); border-radius: 36px;
+  width: 100%; max-width: 390px; min-height: 844px; background: var(--cream); border-radius: 36px;
   box-shadow: 0 0 0 1px var(--border-frame), 0 20px 50px rgba(35, 57, 42, 0.18);
   overflow: hidden; position: relative; display: flex; flex-direction: column;
 }
 @media (max-width: 430px) {
   .canvas { padding: 0; }
-  .frame { width: 100%; min-height: 100dvh; border-radius: 0; box-shadow: none; }
+  .frame { max-width: none; min-height: 100dvh; border-radius: 0; box-shadow: none; }
+}
+@media (min-width: 768px) {
+  .canvas { padding: 28px 24px 64px; }
+  .frame { max-width: 900px; min-height: 0; border-radius: 32px; }
+  .header { padding: 24px 28px 12px; }
+}
+@media (min-width: 1100px) {
+  .canvas { padding: 36px 32px 72px; }
+  .frame { max-width: 1180px; }
+  .header { padding: 28px 36px 14px; }
+}
+
+/* Navegación del encabezado (solo tablet y escritorio) */
+.nav, .nav-wrap { display: none; }
+@media (min-width: 768px) {
+  .nav { display: flex; align-items: center; gap: 4px; }
+  .nav a { font-size: 13px; color: var(--ink-2); padding: 8px 12px; border-radius: 999px; text-decoration: none; }
+  .nav a:hover { background: var(--cream-light); color: var(--forest); text-decoration: none; }
+  .nav a.on { background: var(--forest); color: var(--cream); }
+  .nav-wrap { display: inline-block; background: rgba(251, 250, 245, 0.85); border-radius: 999px; padding: 2px 4px; }
+  .nav-dark .nav a { color: var(--muted-dark); }
+  .nav-dark .nav a:hover { background: var(--forest-2); color: var(--cream); }
+  .nav-dark .nav a.on { background: var(--lime); color: var(--ink); }
+}
+
+/* Split: una columna en móvil (los hijos se intercalan por .o1..o5);
+   dos columnas desde tablet, con la lateral pegajosa */
+.split { display: grid; grid-template-columns: minmax(0, 1fr); }
+.split > .main, .split > .side { display: contents; }
+.o1 { order: 1; } .o2 { order: 2; } .o3 { order: 3; } .o4 { order: 4; } .o5 { order: 5; }
+@media (min-width: 768px) {
+  .split { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 0 12px; padding: 0 8px 24px; align-items: start; }
+  .split > .main, .split > .side { display: flex; flex-direction: column; min-width: 0; }
+  .split > .side { position: sticky; top: 24px; }
+}
+@media (min-width: 1100px) {
+  .split { grid-template-columns: minmax(0, 1fr) 440px; gap: 0 24px; padding: 0 16px 32px; }
+}
+
+/* Rejilla de tarjetas de causas */
+.cards { display: flex; flex-direction: column; gap: 14px; padding: 0 20px 28px; }
+@media (min-width: 768px) {
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 28px 32px; }
+  .chips { flex-wrap: wrap; overflow: visible; padding: 18px 28px 10px; }
+  .px20 { padding-left: 28px; padding-right: 28px; }
+  .hero-copy { max-width: 560px; }
+  .select-pill { max-width: 320px; }
+  .form-narrow { max-width: 680px; margin: 0 auto; width: 100%; }
+}
+@media (min-width: 1100px) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding: 0 36px 40px; }
+  .chips { padding: 18px 36px 10px; }
+  .px20 { padding-left: 36px; padding-right: 36px; }
+  .explore-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 24px; }
 }
 
 /* Encabezado */
@@ -146,6 +201,10 @@ button:disabled { cursor: not-allowed; }
 /* Hoja inferior (sheet) */
 .overlay { position: absolute; inset: 0; background: rgba(28, 42, 32, 0.45); display: flex; align-items: flex-end; z-index: 10; }
 .sheet { width: 100%; background: var(--cream); border-radius: 28px 28px 0 0; padding: 22px 20px 26px; display: flex; flex-direction: column; gap: 14px; }
+@media (min-width: 768px) {
+  .overlay { align-items: center; justify-content: center; padding: 24px; }
+  .sheet { max-width: 440px; border-radius: 28px; box-shadow: 0 24px 60px rgba(28, 42, 32, 0.35); }
+}
 
 /* Panel de integridad con glow al coincidir */
 .integrity { transition: box-shadow 0.4s; }
