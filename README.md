@@ -66,8 +66,8 @@ Un hito sin dinero (por ejemplo, una jornada de limpieza) sigue el mismo camino 
   huella deja de coincidir.
 - **Las horas no se inflan.** Cada Tejedor aparece una sola vez por hito, con 1 a 40 horas, y las firma el Veedor.
 - **Sin colusión obvia.** El Veedor no puede ser el organizador ni el destinatario de ningún hito.
-- **Sin fecha límite ni cancelación.** Nadie puede congelar una causa con fondos; más aportes son más alcance,
-  con hitos nuevos.
+- **Sin fecha límite ni cancelación por causa.** Más aportes son más alcance, con hitos nuevos. El admin solo puede
+  pausar todo el contrato en una emergencia: frena aportes y aprobaciones, pero no mueve fondos.
 
 ## Qué va on-chain y qué no
 
@@ -92,6 +92,7 @@ Regla: va on-chain solo lo que una empresa necesitaría no tener que creerle a n
 - Corre en **Monad testnet** con un token de prueba (mUSDC). La salida a pesos queda para producción.
 - Si el Veedor y el organizador se coluden, el contrato no lo detecta. Siguiente paso: verificación 2 de 3.
 - Si una causa se abandona, sus fondos quedan congelados: nunca mal usados, pero tampoco devueltos.
+- El admin puede pausar el contrato completo (`pause`): frena aportes, evidencias y aprobaciones de todas las causas.
 - Un hito paga a un solo destinatario; repartir entre varios Tejedores según horas es trabajo futuro.
 
 ## Contexto
@@ -147,7 +148,7 @@ Las variables `NEXT_PUBLIC_*` quedan fijas en el build: si cambian, hay que volv
 
 ```
 src/app/            rutas (App Router), una carpeta por pantalla
-src/components/     Frame (marco 390×844), Header (logo + pill de rol/wallet), ui (Cta, Bar, Trace, Img…)
+src/components/     Frame (marco fluido: pantalla completa en móvil, hasta 1180 px en escritorio), Header (logo + Nav + pill de rol/wallet), ui (Cta, Bar, Trace, Img…)
 src/lib/seed.ts     datos de seed: causas, hitos, traza, voluntarios (lo que en producción vive en Supabase)
 src/lib/demo.ts     estado compartido de la demo entre pantallas (localStorage)
 src/lib/chain.ts    lecturas del contrato: useCauseChain, useVolunteerChain

@@ -8,7 +8,7 @@ const sans = Instrument_Sans({ subsets: ["latin"], weight: ["400", "500", "600"]
 export const metadata: Metadata = {
   title: "Loopi · Ayuda que se ve llegar",
   description: "Cada peso y cada hora, con evidencia. Causas financiadas por hitos y verificadas por terceros en Monad.",
-  icons: { icon: "/assets/logo-15.png" },
+  // Íconos por convención de archivos: src/app/favicon.ico, icon.png y apple-icon.png (isotipo)
 };
 
 export const viewport: Viewport = { themeColor: "#DCE3D3", width: "device-width", initialScale: 1 };
